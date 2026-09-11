@@ -1,0 +1,50 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<!-- Reproduces the restrictions of a real site: no workers. If the overlay
+     ever tries to create one again, this page catches it. -->
+<meta http-equiv="Content-Security-Policy" content="worker-src 'none'; child-src 'none'">
+<title>Test harness · overlay</title>
+<style>
+ body{margin:0;font:16px/1.7 Georgia,serif;background:#fbfaf7;color:#23252b}
+ article{max-width:680px;margin:0 auto;padding:56px 24px}
+ h1{font-size:30px;margin:0 0 6px} .meta{color:#8a8d96;font-size:13px;margin-bottom:28px}
+ p{margin:0 0 18px}
+ .aviso{position:fixed;left:12px;bottom:12px;background:#111827;color:#e8ecf5;font:12px system-ui;
+   padding:8px 12px;border-radius:8px;z-index:2147483647}
+</style></head><body>
+<article>
+ <h1>Just an ordinary page</h1>
+ <div class="meta">Test harness — with a restrictive CSP, like a real site</div>
+ <p>Este texto sólo existe para comprobar que la mosca se pasea por encima sin romper nada
+ de la página: ni los estilos, ni la selección de texto, ni los clics en los enlaces.</p>
+ <p>The overlay lives inside a closed <em>shadow DOM</em>, so the site styles cannot reach it and
+ its own cannot leak out. The canvas ignores the mouse except right on top of the fly.</p>
+ <p>While it walks, its feeding circuit is genuinely running: 448 neurons and 20,901 synapses
+ from the <em>Drosophila</em> connectome. The busier the network, the more it moves. Click it
+ and you feed it: its taste neurons get the stimulus.</p>
+ <p>Lorem ipsum aparte, lo que importa aquí es que nada de esto interfiere con la lectura.
+ La mosca es un adorno que se comporta según lo que hacen sus neuronas.</p>
+</article>
+<div class="aviso" id="aviso">Click the fly to give it sugar</div>
+<script>
+ document.addEventListener('mosca:come', e => {
+   const a=document.getElementById('aviso');
+   a.textContent = `EATING — hit at (${Math.round(e.detail.x)}, ${Math.round(e.detail.y)})`;
+   a.style.background='#166534';
+ });
+ document.addEventListener('mosca:saciada', () => {
+   const a=document.getElementById('aviso');
+   a.textContent='Click the fly to give it sugar'; a.style.background='#111827';
+ });
+</script>
+<script>
+// --- stubs de las APIs de extension, solo para el banco de pruebas ---
+window.chrome = {
+  runtime: { getURL: p => new URL(p, location.href).href, onMessage: { addListener(){} } },
+  storage: { local: {
+    get: async k => { const o={}; for (const n of [].concat(k)){ const v=localStorage.getItem(n); if(v!==null)o[n]=JSON.parse(v);} return o; },
+    set: async o => { for (const [n,v] of Object.entries(o)) localStorage.setItem(n, JSON.stringify(v)); }
+  } }
+};
+</script>
+<script src="js/overlay.bundle.js?v=1789165578"></script>
+</body></html>

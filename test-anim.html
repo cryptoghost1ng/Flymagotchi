@@ -1,0 +1,44 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Test harness · animation</title>
+<style>
+ body{margin:0;background:#0a0c16;color:#e8ecf5;font:13px system-ui;display:flex;
+   flex-wrap:wrap;gap:10px;padding:14px}
+ .caja{background:radial-gradient(circle at 50% 45%,#141a2e 0%,#0a0c16 70%);
+   border:1px solid #1e2438;border-radius:12px;padding:8px;width:300px}
+ h3{margin:0 0 4px;font-size:12px;color:#8794ad;font-weight:600;letter-spacing:.05em;
+   text-transform:uppercase}
+ canvas{display:block;width:100%;height:260px}
+ .d{color:#5a6480;font-size:11px;margin-top:4px}
+</style></head><body>
+<script type="module">
+import { Fly } from './js/fly-draw.js?v=1789165072';
+const sp = {};
+await Promise.all(['body','wing'].map(n => new Promise(r => {
+  const i = new Image(); i.onload = () => { sp[n] = i; r(); }; i.src = `assets/${n}.png`;
+})));
+const STATES = [
+  ['resting',   { walk:0,    eat:0,   fly:0,    turn:0 },    'idle: it grooms itself'],
+  ['walking',   { walk:1,    eat:0,   fly:0,    turn:0.03 }, 'tripod gait: 3 feet planted, 3 swinging'],
+  ['eating',    { walk:0.05, eat:1,   fly:0,    turn:0 },    'proboscis out, with the labellum'],
+  ['flying',    { walk:0,    eat:0,   fly:1,    turn:0.04 }, 'wings beating, legs tucked, shadow below'],
+  ['taking off',{ walk:0.3,  eat:0,   fly:0.45, turn:0 },    'halfway there'],
+  ['eating and turning', { walk:0.6, eat:0.7, fly:0, turn:-0.06 }, 'blended states'],
+];
+for (const [nom, est, desc] of STATES) {
+  const d = document.createElement('div'); d.className = 'caja';
+  d.innerHTML = `<h3>${nom}</h3><canvas></canvas><div class="d">${desc}</div>`;
+  document.body.appendChild(d);
+  const cv = d.querySelector('canvas'), ctx = cv.getContext('2d');
+  const m = new Fly(sp);
+  let t0 = performance.now();
+  (function loop(){
+    const dpr = devicePixelRatio || 1;
+    if (cv.width !== cv.clientWidth*dpr) { cv.width = cv.clientWidth*dpr; cv.height = 260*dpr; }
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,cv.clientWidth,260);
+    const now = performance.now(); m.update(now - t0, est); t0 = now;
+    ctx.save(); ctx.translate(cv.clientWidth/2, 140);
+    m.draw(ctx, 64); ctx.restore();
+    requestAnimationFrame(loop);
+  })();
+}
+</script></body></html>

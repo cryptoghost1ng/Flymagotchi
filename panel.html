@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Flymagotchi</title><link rel="stylesheet" href="panel.css"></head>
+<body>
+<header>
+  <div class="id">
+    <span id="name">#------</span>
+    <span id="age" class="sub">—</span>
+  </div>
+  <div class="hd"><button id="helpbtn" class="ghost" title="How this works">?</button><div id="state" class="chip">waking up</div></div>
+</header>
+
+<section id="help" class="help-panel" hidden>
+  <h2>What you are looking at</h2>
+  <p>This is a <b>real fruit-fly circuit</b>, running live. 448 neurons and 20,901 synapses,
+  traced from an actual <i>Drosophila</i> brain by electron microscope. When the proboscis
+  comes out it is because <b>MN9</b> — the motor neuron that extends it — just fired.</p>
+
+  <h3>How to play</h3>
+  <ul>
+    <li><b>Give it sugar.</b> 21 taste neurons get stimulated. Watch the wave cross the
+    circuit and reach MN9.</li>
+    <li><b>Let it get hungry.</b> Full to starving takes 4 hours of real time, browser
+    closed or not.</li>
+    <li><b>Let it out on the web</b> and it walks over the page you are reading. Move your
+    pointer at it <i>fast</i> and it bolts — that is a looming stimulus.</li>
+    <li><b>Click any neuron to silence it</b> and watch the MN9 trace below. Press
+    <i>Give it its neurons back</i> to undo.</li>
+  </ul>
+
+  <h3>The network view</h3>
+  <p>Each dot is a neuron; each faint line is a real synapse. When a neuron fires, the
+  connections leaving it light up — <span class="exc">blue if excitatory</span>,
+  <span class="inh">pink if inhibitory</span>. The layout groups neurons by who they talk
+  to; <b>it is not anatomy</b>.</p>
+
+  <h3>Why your fly is unique</h3>
+  <p>On install you got a seed, and the seed silenced 40 neurons. About a third of this
+  circuit is <b>inhibitory</b> — neurons whose job is to stop the fly eating. So knocking
+  out 40 at random sometimes cripples it, and sometimes removes the brakes and produces a
+  fly that eats <i>better</i> than a normal one. Measured over 8 seeds: 2 better, 3 worse,
+  3 the same. Nobody designed that.</p>
+
+  <h3>What is real and what is not</h3>
+  <p><b>Real:</b> the neurons, the synapses, MN9 in Hz, the proboscis, your mutation.<br>
+  <b>Not real:</b> the hunger clock, the walking and the wingbeat (good animation, but
+  animation), and the artwork, which is AI-generated illustration.</p>
+
+  <p class="src">FlyWire connectome (Dorkenwald et al., Nature 2024, CC-BY) · LIF model
+  (Shiu et al., Nature 2024). This is not a fly and it is not alive — it is a real circuit
+  run through a simple model of neurons.</p>
+  <button id="helpclose" class="cta2">Got it</button>
+</section>
+
+<canvas id="stage"></canvas>
+
+<div class="hunger-bar">
+  <div class="lbl"><span>Hunger</span><span id="hunger-val">—</span></div>
+  <div class="track"><div id="hunger" class="fill"></div></div>
+  <div class="lbl"><span id="last-meal">—</span><span id="meals">—</span></div>
+</div>
+
+<button id="feed" class="cta">Give it sugar</button>
+<button id="release" class="cta2">Let it out on the web</button>
+
+<section class="panel">
+  <h2>Its circuit, right now</h2>
+  <div class="row"><span>MN9 · urge to eat</span><b id="mn9">0 Hz</b></div>
+  <div class="row"><span>Neurons firing</span><b id="active">0 / 448</b></div>
+  <div class="row"><span>Excitatory</span><b id="exc" class="exc">0</b></div>
+  <div class="row"><span>Inhibitory</span><b id="inh" class="inh">0</b></div>
+  <div class="row"><span>Silenced by its mutation</span><b id="mut">40</b></div>
+</section>
+
+<section class="lab">
+  <h2>Its brain · touch it</h2>
+  <p class="help">Every dot is a real neuron. <b>Click one to silence it</b> and watch what
+  happens to MN9. This is the same experiment the original paper runs.</p>
+  <canvas id="net"></canvas>
+  <div id="card" class="card" hidden></div>
+  <div class="legend">
+    <span><i class="pt sugar"></i>sugar goes in</span>
+    <span><i class="pt mn9"></i>MN9 comes out</span>
+    <span><i class="pt off"></i>silenced</span>
+  </div>
+  <div class="trace">
+    <canvas id="trace"></canvas>
+    <div class="lbl"><span>MN9 over the last 20 s</span><span id="trace-max">—</span></div>
+  </div>
+  <button id="reset" class="cta2">Give it its neurons back</button>
+</section>
+
+<p class="foot" id="foot">448 neurons · 20,901 synapses · extracted from the FlyWire v630 connectome
+(127,400 neurons). Leaky integrate-and-fire model from Shiu et al. 2024.</p>
+<script type="module" src="js/panel.js"></script>
+</body></html>

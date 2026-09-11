@@ -1,0 +1,19 @@
+# secrets — never
+.env
+.env.*
+*.key
+
+# connectome data and intermediates live outside the repo (gigabytes)
+vendor/
+data/male-cns/
+data/reducido/
+data/macho_reducido/
+data/escape_reducido/
+frames*/
+results/
+.venv/
+
+# os / editor
+.DS_Store
+__pycache__/
+*.pyc
