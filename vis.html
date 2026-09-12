@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><body style="background:#fff;font:28px monospace;padding:20px">
+<div id="o">…</div>
+<script>
+let frames = 0; requestAnimationFrame(function f(){ frames++; requestAnimationFrame(f); });
+setTimeout(() => { document.getElementById('o').textContent =
+  `visibility=${document.visibilityState}  hidden=${document.hidden}  rAF_frames=${frames}`; }, 2000);
+</script></body>

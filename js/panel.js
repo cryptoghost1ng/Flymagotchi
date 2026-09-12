@@ -1,7 +1,7 @@
 import { mutationFromSeed, nameFromSeed } from './mutation.js';
 import { Fly, SugarDrop } from './fly-draw.js';
 
-const VERSION = '1789165980';   // la estampa el build: evita que el navegador sirva un worker viejo
+const VERSION = '1789205868';   // la estampa el build: evita que el navegador sirva un worker viejo
 
 // --- almacen: chrome.storage en la extension, localStorage en el banco de pruebas
 const store = {
@@ -47,6 +47,7 @@ function relayout(){
 let circuit, fly, drop = null, worker, sugarImg;
 let hunger = 0.5, mn9Hz = 0, activeN = 0, excN = 0, inhN = 0;
 let glow, XY, nSilenced = 0, lastMeal = Date.now(), mealCount = 0;
+let accMs = 0, accMn9 = 0, accExc = 0, accInh = 0, accActive = 0, accFrames = 0;
 let outEdges = null, edgeBg = null;        // synapse index + static background layer
 let silencedNow = new Set(), silencedBase = [], hover = -1, fichaDe = -1;
 const history = [];                       // MN9 Hz de los ultimos 20 s
@@ -94,12 +95,21 @@ const history = [];                       // MN9 Hz de los ultimos 20 s
     } else if (m2.tipo === 'silencio'){
       $('#mut').textContent = m2.n;
     } else if (m2.tipo === 'frame'){
-      const seg = m2.ms/1000 || 0.05;
-      mn9Hz = m2.mn9/seg; excN = m2.exc; inhN = m2.inh;
-      activeN = 0;
+      let firing = 0;
       for (let i=0;i<glow.length;i++){
         glow[i] *= 0.82;
-        if (m2.disparos[i]) { glow[i]=1; activeN++; }
+        if (m2.disparos[i]) { glow[i]=1; firing++; }
+      }
+      // Estas cifras eran instantaneas por frame: a 16 ms un solo disparo se
+      // lee como 60 Hz y el panel parpadeaba entre 0 y 200. Se promedian.
+      accMs += m2.ms || 16; accMn9 += m2.mn9; accExc += m2.exc;
+      accInh += m2.inh; accActive += firing; accFrames++;
+      if (accMs >= 320){
+        mn9Hz = accMn9 / (accMs/1000);
+        excN = Math.round(accExc/accFrames);
+        inhN = Math.round(accInh/accFrames);
+        activeN = Math.round(accActive/accFrames);
+        accMs = accMn9 = accExc = accInh = accActive = accFrames = 0;
       }
       if (m2.mn9>0) satiate(m2.mn9);
     }

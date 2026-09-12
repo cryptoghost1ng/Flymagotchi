@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><title>shot</title>
+<style>html,body{margin:0;background:#0a0c16}iframe{border:0;width:430px;height:1180px;display:block}</style>
+<iframe id="f" src="panel.html"></iframe>
+<script>
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+document.getElementById('f').onload = async () => {
+  const d = document.getElementById('f').contentDocument;
+  const feed = () => d.getElementById('feed').click();
+  await sleep(900);
+  d.getElementById('helpclose')?.click();
+
+  // El barrido tarda, asi que se silencia PRIMERO y se come despues: si no,
+  // la comida se acaba antes de que la captura llegue.
+  if (location.hash === '#lab') {
+    const mut = d.getElementById('mut'), antes = mut.textContent;
+    const n = d.getElementById('net'), r = n.getBoundingClientRect();
+    outer:
+    for (let y = 8; y < r.height; y += 9)
+      for (let x = 8; x < r.width; x += 9) {
+        n.dispatchEvent(new MouseEvent('click', {clientX: r.left+x, clientY: r.top+y, bubbles: true}));
+        await sleep(220);
+        if (mut.textContent !== antes) break outer;
+      }
+  }
+  // 3 s de hueco: mientras la gota cae, el boton se ignora
+  feed();
+  setInterval(feed, 3000);
+};
+</script>

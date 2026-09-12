@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flymagotchi — Privacy policy</title>
+<meta name="robots" content="index,follow">
+<link rel="icon" href="assets/body.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Flymagotchi<i>.</i></div>
+    <nav><a href="/">Back to the fly</a></nav>
+  </div>
+</header>
+
+<main>
+<section>
+  <div class="read">
+    <p class="eyebrow">Privacy policy · last updated 12 September 2026</p>
+    <h2>Flymagotchi collects nothing</h2>
+
+    <p>The extension and this website do not collect, transmit, sell or share any personal
+    data. There is no analytics, no tracking, no account, and no server that receives
+    anything from you. The simulation runs entirely inside your browser.</p>
+
+    <h3>What is stored, and where</h3>
+    <p>The extension keeps four values in your browser's local extension storage, on your
+    own device:</p>
+    <ul>
+      <li>a random <strong>seed</strong> generated when you install it, which decides which
+      40 neurons are silenced in your fly;</li>
+      <li>the <strong>time it was created</strong>, to show its age;</li>
+      <li>the <strong>time it last ate</strong>, to advance the hunger clock;</li>
+      <li>a <strong>count of meals</strong>.</li>
+    </ul>
+    <p>None of it leaves your device. None of it identifies you. Uninstalling the extension
+    deletes all of it. This website stores one similar value, a seed, in your browser's
+    local storage so your fly stays the same between visits.</p>
+
+    <h3>Network requests</h3>
+    <p>The extension makes no network requests at all. Everything it needs — the connectome
+    data, the simulator and the artwork — ships inside the package and is read from disk.
+    There is no remote code: nothing is fetched and executed from anywhere.</p>
+
+    <h3>Permissions, and why each one exists</h3>
+    <ul>
+      <li><strong>storage</strong> — to keep the four values above.</li>
+      <li><strong>sidePanel</strong> — the pet lives in the side panel; that is the interface.</li>
+      <li><strong>activeTab</strong> and <strong>scripting</strong> — used only when you press
+      <em>Let it out on the web</em>, to draw the fly on top of the tab you are looking at.</li>
+      <li><strong>access to websites</strong> (<code>*://*/*</code>) — optional, never requested
+      at install. Chrome asks for it at the moment you press that button, and
+      <em>Bring it back</em> revokes it. It is used only to draw the fly over the page. The
+      extension does not read, store or transmit the content of any page you visit.</li>
+    </ul>
+
+    <h3>Children</h3>
+    <p>The extension is not directed at children and collects no data from anyone, of any age.</p>
+
+    <h3>Changes</h3>
+    <p>If this policy ever changes, the new version will be published at this address with a
+    new date. The source is public, so any change in behaviour is visible in the commit
+    history: <a class="link" href="https://github.com/cryptoghost1ng/Flymagotchi">github.com/cryptoghost1ng/Flymagotchi</a>.</p>
+
+    <h3>Contact</h3>
+    <p>Open an issue on the repository above.</p>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="cite">Flymagotchi · extension code MIT · connectome data CC-BY 4.0</p>
+    <p><a href="/">flymagotchi.vercel.app</a></p>
+  </div>
+</footer>
+</body></html>
