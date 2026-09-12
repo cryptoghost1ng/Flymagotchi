@@ -1,0 +1,15 @@
+{
+  "note": "Candidate tickers, published before the run. The fly's spike timing picks the index. Committing this list in advance is what makes 'she chose it' true: the set is fixed, only which one is hers is left to the circuit.",
+  "list": [
+    "BUZZ","GNAT","SWAT","FLIT","HOVR","WING","GRUB","LARV","MIDG","MAGG",
+    "SPIK","AXON","SYNP","GLIA","NRVE","BRAI","MIND","CRTX","GANG","DNDR",
+    "SUGR","SWET","NECT","SYRP","HONY","GLUC","FRUC","TAST","LICK","SLRP",
+    "GULP","SNAK","FEST","CRMB","NOMS","YUMM","HNGR","CRAV","PECK","BITE",
+    "PROB","LABL","MOUT","CHEW","SIPP","FEED","MEAL","BELL","MN9X","MOTR",
+    "FIRE","PULS","JOLT","ZAPP","TICK","TWCH","VOLT","MILI","HRTZ","WATT",
+    "WIRE","MAPD","TRCE","SLIC","MICR","SCOP","LENS","GRID","MESH","NODE",
+    "FLYW","CNCT","OMMA","RETN","LOBE","SEZZ","THRX","ABDM","TARS","SETA",
+    "MELA","DROS","ROSO","VINE","FRUT","RIPE","FERM","YEST","BREW","MUSH",
+    "ITCH","WHIR","ZZZT","HUMM","DART","LOOP","ORBT","LAND"
+  ]
+}
