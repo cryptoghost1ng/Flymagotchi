@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flymagotchi — a pet whose brain is real</title>
+<meta name="description" content="A browser extension pet running 448 neurons and 20,901 synapses traced from an actual fruit fly brain. Feed it here, no install needed.">
+<meta property="og:title" content="Flymagotchi — a pet whose brain is real">
+<meta property="og:description" content="448 neurons from the Drosophila connectome, simulated live in your browser. Feed it, then break it.">
+<link rel="icon" href="assets/body.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Flymagotchi<i>.</i></div>
+    <nav>
+      <a href="#brain">The brain</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#honest">What's real</a>
+      <a class="btn" href="https://github.com/cryptoghost1ng/Flymagotchi">Get it</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<div class="wrap hero">
+  <p class="eyebrow">Drosophila melanogaster · FlyWire v630 · running live on this page</p>
+  <h1>Your pet's brain is <em>not made up</em>.</h1>
+  <p class="lede">Give it sugar. Twenty-one taste neurons fire, the signal crosses a circuit
+  traced from a real fly by electron microscope, and the proboscis comes out — because MN9,
+  the motor neuron that extends it, just fired.</p>
+
+  <figure class="fig">
+    <div class="fig-body">
+      <div class="stage">
+        <canvas id="fly"></canvas>
+        <div class="side">
+          <div class="readout">
+            <div class="ro mn9"><b id="r-mn9">0 Hz</b><span>MN9 · urge to eat</span></div>
+            <div class="ro"><b id="r-active">0</b><span>neurons firing</span></div>
+            <div class="ro exc"><b id="r-exc">0</b><span>excitatory</span></div>
+            <div class="ro inh"><b id="r-inh">0</b><span>inhibitory</span></div>
+          </div>
+          <canvas id="net"></canvas>
+          <button class="feed" id="feed">Give it sugar</button>
+          <p class="hint" id="hint">Each dot is a neuron, each line a synapse.
+          <em>Click a neuron to silence it</em> and watch MN9.</p>
+        </div>
+      </div>
+    </div>
+    <figcaption class="fig-cap"><b>Fig. 1</b>
+      <span>The feeding circuit, simulated in your browser at roughly fifty times real
+      time. Nothing here is pre-recorded.</span></figcaption>
+  </figure>
+</div>
+
+<div class="strip">
+  <div class="wrap">
+    <div class="m"><b>127,400</b><span>neurons in the connectome</span></div>
+    <div class="m"><b>448</b><span>that fire when it tastes sugar</span></div>
+    <div class="m"><b>20,901</b><span>synapses between them</span></div>
+    <div class="m"><b>20 ms</b><span>cpu per second simulated</span></div>
+  </div>
+</div>
+
+<figure class="fig bleed">
+  <div class="fig-body">
+    <canvas id="slow"></canvas>
+    <div class="slow-hud">
+      <span id="slow-t">0.0 ms</span>
+      <span class="sep">/</span>
+      <span id="slow-phase">waiting for sugar</span>
+    </div>
+  </div>
+  <figcaption class="fig-cap wrap"><b>Fig. 2</b>
+    <span>One bite, slowed down about sixteen times. Each travelling dot is a single spike
+    crossing a single synapse — <i style="color:var(--exc)">blue excites</i> the neuron it
+    lands on, <i style="color:var(--inh)">pink inhibits</i> it. The gold neuron is MN9. It
+    takes roughly forty milliseconds for sugar at the mouthparts to become a decision to
+    eat. <b>This is anatomy</b>: every neuron sits where it really sits in the head, over
+    a backdrop of 26,000 others — the two optic lobes at the sides, the central brain
+    between them. The action happens low and in the middle because that is where taste
+    arrives: the subesophageal zone, right above the mouthparts. 85% of the circuit has a
+    measured position; the remaining 67 neurons are placed among the neighbours they
+    connect to.</span></figcaption>
+</figure>
+
+<section id="brain">
+  <div class="read">
+    <h2>A wiring diagram of an entire brain</h2>
+    <p>A connectome is a map of every neuron and every synapse between them. For the adult
+    fruit fly it took a decade: the brain was sliced into thousands of sections, imaged by
+    electron microscope, and every neuron traced through the stack by machine learning and
+    human proofreading. The result — <strong>127,400 neurons, 14,687,178 synapses</strong> —
+    is the first complete wiring diagram of an adult animal brain, and it is public.</p>
+
+    <p>A wiring diagram is not a working brain, though. It says who talks to whom, not what
+    they say. To get behaviour out of it you need a model of what each neuron does.</p>
+
+    <h3>The model</h3>
+    <p>Every neuron here is a <strong>leaky integrate-and-fire</strong> unit, about the
+    simplest useful neuron there is. It holds a voltage. Input pushes it up. Left alone it
+    leaks back down. Cross a threshold and it fires, dumps its charge and goes briefly deaf.</p>
+
+    <div class="eq">dv/dt = (v_rest &minus; v + g) / 20 ms   <span class="c">membrane voltage, leaking back to &minus;52 mV</span>
+dg/dt = &minus;g / 5 ms                 <span class="c">synaptic input, decaying</span>
+fire when v &gt; &minus;45 mV           <span class="c">then reset, deaf for 2.2 ms</span></div>
+
+    <p>Each synapse carries a weight set by how many contacts the two neurons actually make
+    in the electron microscopy, and a sign: acetylcholine excites, GABA and glutamate
+    inhibit. Nothing is trained. The wiring is what it is.</p>
+
+    <h3>Why 448 neurons and not 127,400</h3>
+    <p>Because when sugar touches the fly's mouthparts, only 448 neurons ever fire. The other
+    127,000 sit at rest, and a neuron at rest sends no current to anyone. So you can drop
+    them without changing the answer — which is a claim, so it was tested (<a class="link" href="#evidence">Fig. 2</a>).</p>
+
+    <h3>The part worth staring at</h3>
+    <p>Roughly a third of the interneurons in this circuit are <strong>inhibitory</strong>.
+    They exist to stop the fly eating. A brain that only knew how to say yes would eat until
+    it died, so most of the machinery between <em>this is sugar</em> and <em>extend the
+    proboscis</em> is machinery for saying no, or not yet, or not this much.</p>
+
+    <p>That single fact is why this is a game. On install you get a seed, and the seed
+    silences 40 neurons. Sometimes you knock out neurons that were carrying the signal, and
+    your fly is a poor eater. Sometimes you knock out the brakes, and your fly eats
+    <strong>better than a normal one</strong>. Across eight consecutive unselected seeds:
+    two better, three worse, three unchanged. Nobody designed that distribution.</p>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="read">
+    <h2>The claims, and how they were checked</h2>
+    <p>Dropping 99.65% of a brain and expecting the same behaviour deserves evidence. Full
+    model against reduced model, four conditions, three random seeds each, measuring MN9:</p>
+
+    <table>
+      <thead><tr><th>Condition</th><th>Full model</th><th>Reduced</th><th>Δ</th></tr></thead>
+      <tbody>
+        <tr><td>unmutated</td><td>68.0 Hz</td><td>67.3 Hz</td><td>−0.7</td></tr>
+        <tr><td>mutant A</td><td>34.7 Hz</td><td>31.7 Hz</td><td>−3.0</td></tr>
+        <tr><td>mutant B</td><td>94.0 Hz</td><td>88.7 Hz</td><td>−5.3</td></tr>
+        <tr><td>mutant C</td><td>115.3 Hz</td><td>111.7 Hz</td><td>−3.7</td></tr>
+      </tbody>
+    </table>
+    <p class="fig-cap"><b>Fig. 2</b><span>All within 2σ of the model's own noise, and the
+    ranking between mutants is preserved. There is a consistent bias: the reduced circuit
+    runs about 4% quieter.</span></p>
+
+    <h3>And the simulator itself</h3>
+    <p>The JavaScript here is a reimplementation, so it was calibrated against the original
+    Brian2 model using the same silenced neurons: <strong>4.7% maximum deviation</strong>
+    across four conditions and ten seeds, with the signs mixed, so no systematic bias. It
+    runs at about fifty times real time on one core.</p>
+  </div>
+</section>
+
+<section id="honest">
+  <div class="read">
+    <h2>What is real, and what is not</h2>
+    <p>This matters more than anything else here, so it goes before the fun parts.</p>
+    <div class="two">
+      <div class="card">
+        <h4>Real — computed live</h4>
+        <ul>
+          <li>The 448 neurons and 20,901 synapses, from FlyWire v630</li>
+          <li>The Shiu et al. leaky integrate-and-fire model, unchanged</li>
+          <li>MN9 in hertz, and the proboscis that follows it</li>
+          <li>The excitatory / inhibitory split, live</li>
+          <li>Your mutation, and how much worse or better it makes your fly</li>
+        </ul>
+      </div>
+      <div class="card no">
+        <h4>Not real — game or drawing</h4>
+        <ul>
+          <li>The hunger clock. A number that grows with time</li>
+          <li>The walk and the wingbeat: good animation, but animation</li>
+          <li>The artwork, which is AI-generated illustration, not micrographs</li>
+          <li>The network layout, which groups neurons by who they talk to, not by where they sit in the head</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="token" hidden>
+  <div class="read">
+    <h2>She launched it herself</h2>
+    <p>We put sugar on her mouthparts and waited. <span id="tk-decided">—</span>
+    milliseconds later her proboscis motor neuron had fired
+    <span id="tk-threshold">—</span> times, which is a fly deciding to eat. We took the
+    exact timing of those spikes, hashed it, and that is the ticker. Nobody picked it.</p>
+
+    <div class="ca">
+      <div class="ca-row"><span>Ticker</span><b id="tk-ticker">—</b></div>
+      <div class="ca-row"><span>Chain</span><b id="tk-chain">—</b></div>
+      <div class="ca-row ca-addr">
+        <span>Contract</span>
+        <code id="tk-ca">—</code>
+        <button id="tk-copy" type="button">Copy</button>
+      </div>
+      <a id="tk-explorer" class="ca-link" href="#" rel="noopener">View on the explorer →</a>
+    </div>
+
+    <h3>Check it yourself</h3>
+    <p>This is the part that matters. The decision is deterministic: the same fly, the same
+    sugar and the same seed produce the same spike train every time, down to the tenth of a
+    millisecond. Run it and you get the same four letters.</p>
+    <div class="eq">git clone https://github.com/cryptoghost1ng/Flymagotchi
+node research/she_decides.mjs <span id="tk-seed">—</span>
+<span class="c">→ decided at <span class="tk-decided">—</span> ms · sha256 <span id="tk-hash8">—</span>… · <span class="tk-ticker">—</span></span></div>
+    <p>Or open the panel at the top of this page, which runs the same simulator.</p>
+
+    <h3 id="pair-h">Why it trades against <span class="tk-pair">—</span></h3>
+    <div id="pair-block">
+      <p>This token is <strong>stock-paired</strong>: the other side of its liquidity pool is
+      not a stablecoin, it is tokenised <span class="tk-pair">—</span>. So the price is quoted
+      in the stock, and the stock's own moves feed straight into the chart. Worth knowing
+      before you read anything into a green or red candle.</p>
+      <p id="pair-why">The pairing is not arbitrary. <strong>The brain inside this token was
+      mapped by Google.</strong> The connectome it runs on was reconstructed by Google
+      Research together with HHMI Janelia — the fly you are feeding on this page exists
+      because they traced it, neuron by neuron, out of electron microscope images. It seemed
+      right that it should be quoted in them.</p>
+    </div>
+
+    <h3>The honest split</h3>
+    <p>The fly decides <strong>when</strong>, and the exact timing that becomes the ticker.
+    Everything else is a rig: the name, the supply, the liquidity and the transaction are
+    ours. She has no idea any of this exists — she is 448 neurons that know how to want
+    sugar.</p>
+  </div>
+</section>
+
+<section id="try">
+  <div class="read">
+    <h2>Things to try, in the panel above</h2>
+    <ol class="steps">
+      <li><strong>Find a brake.</strong> Silence neurons one at a time while feeding it. Most
+      do nothing. A few drop MN9 hard — those were carrying the signal. A few make it
+      <em>rise</em>: you just removed an inhibitory neuron.</li>
+      <li><strong>Kill the input.</strong> Silence the green dots. How many sugar sensors can
+      you remove before it stops eating? More than you would guess.</li>
+      <li><strong>Find the bottleneck.</strong> Is there a single neuron that ends feeding
+      altogether?</li>
+      <li><strong>Compare the two kinds of damage.</strong> An excitatory neuron and an
+      inhibitory one fail in opposite directions.</li>
+    </ol>
+
+    <h3>Getting the extension</h3>
+    <p>Not on the Chrome Web Store yet. Clone the repo, open
+    <code>chrome://extensions</code>, turn on Developer mode and load the folder unpacked.
+    It installs asking for <strong>zero browsing permissions</strong> — the fly lives in the
+    side panel until you press <em>Let it out on the web</em>, and then it walks over the
+    pages you read and bolts if you move the pointer at it too fast.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="cite">Connectome: Dorkenwald et al., <em>Neuronal wiring diagram of an adult
+    brain</em>, Nature 2024 (CC-BY 4.0). Model: Shiu et al., Nature 2024. Extension code MIT.
+    <br><br>This is not a fly and it is not alive in any sense a biologist would accept. It
+    is a real circuit run through a simple model of neurons, which is already quite a lot.</p>
+    <p><a href="https://github.com/cryptoghost1ng/Flymagotchi">github.com/cryptoghost1ng/Flymagotchi</a></p>
+  </div>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
