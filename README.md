@@ -219,6 +219,44 @@ the full model — see `research/README.md`.
 
 ---
 
+## The token
+
+**Live.** `$PECK` on Robinhood Chain, quoted in tokenised GOOGL.
+Contract `0xDd2Ac97f76F0882Eea826cC7009CfB8A9B4e27F6`.
+
+The fly picks the ticker, and she picks it by getting hungry. Sugar goes on her
+mouthparts and the clock starts. When MN9 — the motor neuron that extends the proboscis —
+has fired 40 times, that is a fly deciding to eat. The exact timing of those 40 spikes,
+to a tenth of a millisecond, is hashed, and the first characters of the hash become the
+ticker.
+
+Nobody picks it, and nobody can quietly re-roll it, because **the seed is committed in
+public before the run**. Check it yourself:
+
+```bash
+git clone https://github.com/cryptoghost1ng/Flymagotchi
+node research/she_decides.mjs <seed>
+```
+
+Same fly, same sugar, same seed, same four letters. Forever. The website runs the same
+simulator, so you can also do it without cloning anything.
+
+| | |
+|---|---|
+| Chain | Robinhood Chain, quoted in tokenised GOOGL |
+| Contract | `0xDd2Ac97f76F0882Eea826cC7009CfB8A9B4e27F6` |
+| Committed seed | `3579080452` — the first 8 hex of commit `d5546f0`, the commit that published the candidate list |
+| Decided at | 531.1 ms, after 40 MN9 spikes |
+| Ticker | `$PECK` — index 38 of the 98 candidates |
+
+The pairing is not arbitrary either: the connectome this runs on was reconstructed by
+Google Research together with HHMI Janelia. The brain inside the token was mapped by
+Google, so it is quoted in Google.
+
+**The honest split.** She decides *when*, and the exact timing that becomes the ticker.
+Everything else is a rig: the name, the supply, the liquidity and the transaction are ours.
+She has no idea any of this exists — she is 448 neurons that know how to want sugar.
+
 ## Credits and licences
 
 This would not exist without other people's work, and that work is open. Cite it:
